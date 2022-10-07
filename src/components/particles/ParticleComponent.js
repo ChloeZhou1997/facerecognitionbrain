@@ -3,11 +3,11 @@ import Particles from "react-tsparticles";
 import './ParticleComponent.css'
 
 const option = {
-      background: {
-          color: {
-            value: "#659DF2",
-          },
-        },
+      // background: {
+      //     color: {
+      //       value: "#659DF2",
+      //     },
+      //   },
         interactivity: {
           events: {
             onClick: {
@@ -22,7 +22,7 @@ const option = {
           },
           modes: {
             push: {
-              quantity: 4,
+              quantity: 3,
             },
             repulse: {
               distance: 200,
@@ -51,7 +51,7 @@ const option = {
               default: "bounce",
             },
             random: false,
-            speed: 6,
+            speed: 3,
             straight: false,
           },
           number: {
