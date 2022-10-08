@@ -2,12 +2,14 @@ import './App.css';
 import React, { Component } from 'react';
 import Nav from './components/nav/Nav'
 import Logo from './components/logo/Logo';
+import Signin from './components/signin/Signin';
 import ParticleComponent from './components/particles/ParticleComponent'
 import ImageLinkForm from './components/imagelink/ImageLinkForm';
+import Register from './components/register/Register';
 import FaceRecog from './components/facerecog/FaceRecog';
 import Rank from './components/rank/Rank';
 import 'tachyons';
-import Clarifai from 'clarifai';
+// import Clarifai from 'clarifai';
 
 
 // const app = new Clarifai.App({
@@ -29,7 +31,9 @@ export class App extends Component {
     this.state = {
       input:'',
       imageUrl:'',
-      box: {}
+      box: {},
+      route: 'signin',
+      isSignedIn: false,
     }
   }
 
@@ -47,7 +51,6 @@ export class App extends Component {
   };
 
   displayFaceBox = (box) => {
-    console.log(box);
     this.setState({box: box});
   } 
 
@@ -89,18 +92,38 @@ export class App extends Component {
         .catch(error => console.log('error', error));
   }
 
+  onRouteChange = (cur) => {
+    if(cur === 'signout'){
+      this.setState({isSignedIn:false})
+    } else if (cur === 'home'){
+      this.setState({isSignedIn:true})
+    }
+
+    this.setState({route:cur});
+
+  }
+
   render() {
     return (
       <div className='App'> 
         <ParticleComponent />
-        <Nav />
-        <Logo />
-        <Rank />
-            <ImageLinkForm 
-              onInputChange={this.onInputChange} 
-              onButtonSubmit={this.onSubmit}
-            />
-            <FaceRecog box={this.state.box} imageUrl={this.state.imageUrl}/>
+        <Nav isSignedIn={this.state.isSignedIn} onRouteChange={this.onRouteChange}/>
+        {this.state.route === 'home' 
+        ?  <div>
+            <Logo />
+            <Rank />
+                <ImageLinkForm 
+                  onInputChange={this.onInputChange} 
+                  onButtonSubmit={this.onSubmit}
+                />
+                <FaceRecog box={this.state.box} imageUrl={this.state.imageUrl}/>
+          </div>
+          : ( 
+            this.state.route === 'signin' 
+            ? <Signin onRouteChange={this.onRouteChange}/>
+            : <Register onRouteChange={this.onRouteChange}/>
+            )
+        } 
       </div>
     );
   }
