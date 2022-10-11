@@ -36,14 +36,23 @@ export class App extends Component {
       isSignedIn: false,
       user: {
         id:'',
-        email:'',
         name:'',
+        email:'',
         entries:0,
         joined:''
       }
     }
   }
 
+  loadUser = (data) => {
+    this.setState({user: {
+            id:data.id,
+            email:data.email,
+            name:data.name,
+            entries:data.entries,
+            joined: data.joined      
+        }})
+  }
   // componentDidMount(){
   //   fetch('http://localhost:3001')
   //     .then(response => response.json())
@@ -100,8 +109,23 @@ export class App extends Component {
     };
 
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
-        .then(result => result.json())
-        .then(result => this.displayFaceBox(this.calculateFaceLocation(result)))
+        .then(response => response.json())
+        .then(response => {
+             if(response.status.code === 10000) {
+                fetch('http://localhost:3001/image',{
+                  method: 'put',
+                  headers: {'Content-Type':'application/json'},
+                  body:JSON.stringify({
+                    id:this.state.user.id
+                  })
+                })
+                  .then(response => response.json())
+                  .then(count => {
+                    this.setState(Object.assign(this.state.user, {entries : count}));
+                  })
+                this.displayFaceBox(this.calculateFaceLocation(response))
+             }
+          })
         .catch(error => console.log('error', error));
   }
 
@@ -114,18 +138,6 @@ export class App extends Component {
     this.setState({route:cur});
   }
 
-  loadUser = (data) => {
-    this.setState({user: {
-            id:data.id,
-            email:data.email,
-            name:data.name,
-            entries:data.entries,
-            joined: data.joined      
-        }})
-
-    console.log(this.state.user);
-  }
-
   render() {
     return (
       <div className='App'> 
@@ -134,7 +146,7 @@ export class App extends Component {
         {this.state.route === 'home' 
         ?  <div>
             <Logo />
-            <Rank />
+            <Rank name={this.state.user.name} entries={this.state.user.entries}/>
                 <ImageLinkForm 
                   onInputChange={this.onInputChange} 
                   onButtonSubmit={this.onSubmit}
@@ -143,7 +155,7 @@ export class App extends Component {
           </div>
           : ( 
             this.state.route === 'signin' 
-            ? <Signin onRouteChange={this.onRouteChange}/>
+            ? <Signin loadUser = {this.loadUser} onRouteChange={this.onRouteChange}/>
             : <Register loadUser = {this.loadUser} onRouteChange={this.onRouteChange}/>
             )
         } 
