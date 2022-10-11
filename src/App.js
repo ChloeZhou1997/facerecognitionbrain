@@ -34,8 +34,21 @@ export class App extends Component {
       box: {},
       route: 'signin',
       isSignedIn: false,
+      user: {
+        id:'',
+        email:'',
+        name:'',
+        entries:0,
+        joined:''
+      }
     }
   }
+
+  // componentDidMount(){
+  //   fetch('http://localhost:3001')
+  //     .then(response => response.json())
+  //     .then(console.log);
+  // }
 
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -98,9 +111,19 @@ export class App extends Component {
     } else if (cur === 'home'){
       this.setState({isSignedIn:true})
     }
-
     this.setState({route:cur});
+  }
 
+  loadUser = (data) => {
+    this.setState({user: {
+            id:data.id,
+            email:data.email,
+            name:data.name,
+            entries:data.entries,
+            joined: data.joined      
+        }})
+
+    console.log(this.state.user);
   }
 
   render() {
@@ -121,7 +144,7 @@ export class App extends Component {
           : ( 
             this.state.route === 'signin' 
             ? <Signin onRouteChange={this.onRouteChange}/>
-            : <Register onRouteChange={this.onRouteChange}/>
+            : <Register loadUser = {this.loadUser} onRouteChange={this.onRouteChange}/>
             )
         } 
       </div>
