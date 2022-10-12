@@ -35,13 +35,12 @@ class Register extends React.Component {
 		})
 			.then(response => response.json())
 			.then(user => {
-				if(user) {
-					this.props.loadUser(user);
-					console.log(this.state.user);				
+				console.log(user);
+				if(typeof user != 'string') {
+					this.props.loadUser(user[0]);
 					this.props.onRouteChange('home')
 				}
 			})
-		
 	}
     render(){
 	    return (
@@ -77,8 +76,8 @@ class Register extends React.Component {
 				        	name="password"  
 				        	id="password"/>
 				      </div>
-				      <label className="pa0 ma0 lh-copy f6 pointer"><input type="checkbox"/> Remember me</label>
-				    </fieldset>
+{/*				      <label className="pa0 ma0 lh-copy f6 pointer"><input type="checkbox"/> Remember me</label>
+*/}				    </fieldset>
 				    <div className="">
 				      <input 
 				      	onClick = {this.onSubmitRegister}
