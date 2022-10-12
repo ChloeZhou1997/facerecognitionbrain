@@ -24,11 +24,7 @@ const APP_ID = 'my-first-application';
 const MODEL_ID = 'face-detection';
 const MODEL_VERSION_ID = '6dc7e46bc9124c5c8824be4822abe105';    
 
-
-export class App extends Component {
-  constructor() {
-    super();
-    this.state = {
+const initialState = {
       input:'',
       imageUrl:'',
       box: {},
@@ -41,8 +37,13 @@ export class App extends Component {
         entries:0,
         joined:''
       }
+}
+
+export class App extends Component {
+  constructor() {
+    super();
+    this.state = initialState;
     }
-  }
 
   loadUser = (data) => {
     this.setState({user: {
@@ -131,7 +132,7 @@ export class App extends Component {
 
   onRouteChange = (cur) => {
     if(cur === 'signout'){
-      this.setState({isSignedIn:false})
+      this.setState(initialState)
     } else if (cur === 'home'){
       this.setState({isSignedIn:true})
     }
