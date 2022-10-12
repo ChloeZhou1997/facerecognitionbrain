@@ -16,13 +16,13 @@ import 'tachyons';
 //  apiKey: '05bbb7d6de9c43118c0cf7b9ecb86fed'
 // });
 
-const USER_ID = 'j_o_z';
-// Your PAT (Personal Access Token) can be found in the portal under Authentification
-const PAT = '05bbb7d6de9c43118c0cf7b9ecb86fed';
-const APP_ID = 'my-first-application';
-// Change these to whatever model and image URL you want to use
-const MODEL_ID = 'face-detection';
-const MODEL_VERSION_ID = '6dc7e46bc9124c5c8824be4822abe105';    
+// const USER_ID = 'j_o_z';
+// // Your PAT (Personal Access Token) can be found in the portal under Authentification
+// const PAT = '05bbb7d6de9c43118c0cf7b9ecb86fed';
+// const APP_ID = 'my-first-application';
+// // Change these to whatever model and image URL you want to use
+// const MODEL_ID = 'face-detection';
+// const MODEL_VERSION_ID = '6dc7e46bc9124c5c8824be4822abe105';    
 
 const initialState = {
       input:'',
@@ -55,7 +55,7 @@ export class App extends Component {
         }})
   }
   // componentDidMount(){
-  //   fetch('http://localhost:3001')
+  //   fetch('https://arcane-chamber-12966.herokuapp.com')
   //     .then(response => response.json())
   //     .then(console.log);
   // }
@@ -83,49 +83,30 @@ export class App extends Component {
 
   onSubmit = (event) => {
     this.setState({imageUrl:this.state.input});
-
-    const raw = JSON.stringify({
-      "user_app_id": {
-          "user_id": USER_ID,
-          "app_id": APP_ID
-      },
-      "inputs": [
-          {
-              "data": {
-                  "image": {
-                      "url": this.state.imageUrl
-                  }
-              }
-          }
-        ]
-    });
-
-    const requestOptions = {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Key ' + PAT
-        },
-        body: raw
-    };
-
-    fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
-        .then(response => response.json())
+      fetch('https://arcane-chamber-12966.herokuapp.com/imageURL', {
+        method:'post',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          input: this.state.input
+        })
+      })
+        .then(response=>response.json())
         .then(response => {
-             if(response.status.code === 10000) {
-                fetch('http://localhost:3001/image',{
-                  method: 'put',
-                  headers: {'Content-Type':'application/json'},
-                  body:JSON.stringify({
-                    id:this.state.user.id
-                  })
+          console.log(response);
+           if(response.status.code === 10000) {
+              fetch('https://arcane-chamber-12966.herokuapp.com/image',{
+                method: 'put',
+                headers: {'Content-Type':'application/json'},
+                body:JSON.stringify({
+                  id:this.state.user.id
                 })
-                  .then(response => response.json())
-                  .then(count => {
-                    this.setState(Object.assign(this.state.user, {entries : count}));
-                  })
-                this.displayFaceBox(this.calculateFaceLocation(response))
-             }
+              })
+                .then(response => response.json())
+                .then(count => {
+                  this.setState(Object.assign(this.state.user, {entries : count}));
+                })
+              this.displayFaceBox(this.calculateFaceLocation(response))
+           }
           })
         .catch(error => console.log('error', error));
   }
