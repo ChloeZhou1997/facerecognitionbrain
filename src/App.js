@@ -54,11 +54,6 @@ export class App extends Component {
             joined: data.joined      
         }})
   }
-  // componentDidMount(){
-  //   fetch('https://arcane-chamber-12966.herokuapp.com')
-  //     .then(response => response.json())
-  //     .then(console.log);
-  // }
 
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
