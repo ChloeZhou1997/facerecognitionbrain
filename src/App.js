@@ -78,7 +78,7 @@ export class App extends Component {
 
   onSubmit = (event) => {
     this.setState({imageUrl:this.state.input});
-      fetch('https://arcane-chamber-12966.herokuapp.com/imageURL', {
+      fetch('https://face-recognition-2gu6.onrender.com/imageURL', {
         method:'post',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
@@ -89,7 +89,7 @@ export class App extends Component {
         .then(response => {
           console.log(response);
            if(response.status.code === 10000) {
-              fetch('https://arcane-chamber-12966.herokuapp.com/image',{
+              fetch('https://face-recognition-2gu6.onrender.com/image',{
                 method: 'put',
                 headers: {'Content-Type':'application/json'},
                 body:JSON.stringify({
