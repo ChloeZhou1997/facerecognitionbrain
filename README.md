@@ -1,4 +1,4 @@
-# Visit Website
+# Visiting the Website
 
 The demo of the website is deloyed at https://render.com/. If you want to give a try to the website, please follow this [link](https://smart-brain-front-end-m2zu.onrender.com).
 
