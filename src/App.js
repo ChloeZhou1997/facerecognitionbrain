@@ -119,10 +119,12 @@ export class App extends Component {
     return (
       <div className='App'> 
         <ParticleComponent />
+        <p> </p>
+        <Logo />
         <Nav isSignedIn={this.state.isSignedIn} onRouteChange={this.onRouteChange}/>
         {this.state.route === 'home' 
         ?  <div>
-            <Logo />
+
             <Rank name={this.state.user.name} entries={this.state.user.entries}/>
                 <ImageLinkForm 
                   onInputChange={this.onInputChange} 
